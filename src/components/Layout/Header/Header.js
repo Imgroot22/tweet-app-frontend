@@ -1,14 +1,23 @@
+import { useAuth } from "../../../store/auth-context";
+import NavLink from "./NavLink/NavLink";
+import SearchForm from "./SearchForm/SearchForm";
+
 const Header = () => {
+  const auth = useAuth();
+
   return (
-    <div className="container-fluid bg-dark">
+    <div className="container-fluid bg-dark flex-grow-0 flex-shrink-1">
       <nav
         className="navbar navbar-expand-sm navbar-dark bg-dark"
         aria-label="navbar"
       >
         <div className="container-fluid">
-          <a className="navbar-brand my-auto" href="/#">
+          <NavLink
+            className="navbar-brand my-auto"
+            to={auth.isLoggedIn ? "/home" : "/welcome"}
+          >
             Tweet App
-          </a>
+          </NavLink>
           <button
             className="navbar-toggler"
             type="button"
@@ -23,35 +32,64 @@ const Header = () => {
 
           <div className="collapse navbar-collapse" id="navbar">
             <ul className="navbar-nav w-100 justify-content-evenly">
-              <li className="nav-item">
-                <a className="nav-link" aria-current="page" href="/#">
-                  Home
-                </a>
-              </li>
-              <li className="nav-item">
-                <a className="nav-link" href="/#">
-                  Profile
-                </a>
-              </li>
-              <li className="nav-item">
-                <a className="nav-link" href="/#">
-                  sign in
-                </a>
-              </li>
-              <li className="nav-item">
-                <a className="nav-link" href="/#">
-                  sign up
-                </a>
-              </li>
+              {auth.isLoggedIn && (
+                <li className="nav-item">
+                  <NavLink
+                    className="nav-link"
+                    activeClass="active"
+                    aria-current="page"
+                    to="/home"
+                  >
+                    Home
+                  </NavLink>
+                </li>
+              )}
+              {auth.isLoggedIn && (
+                <li className="nav-item">
+                  <NavLink
+                    className="nav-link"
+                    activeClass="active"
+                    to={"/tweets/" + auth.user.loginId}
+                  >
+                    My Tweets
+                  </NavLink>
+                </li>
+              )}
+              {!auth.isLoggedIn && (
+                <li className="nav-item">
+                  <NavLink
+                    className="nav-link"
+                    activeClass="active"
+                    to="/login"
+                  >
+                    sign in
+                  </NavLink>
+                </li>
+              )}
+              {!auth.isLoggedIn && (
+                <li className="nav-item">
+                  <NavLink
+                    className="nav-link"
+                    activeClass="active"
+                    to="/register"
+                  >
+                    sign up
+                  </NavLink>
+                </li>
+              )}
+              {auth.isLoggedIn && (
+                <li className="nav-item">
+                  <div
+                    className="nav-link"
+                    onClick={auth.logout}
+                    style={{ cursor: "pointer" }}
+                  >
+                    logout
+                  </div>
+                </li>
+              )}
             </ul>
-            <form>
-              <input
-                className="form-control"
-                type="text"
-                placeholder="Search"
-                aria-label="Search"
-              />
-            </form>
+            {auth.isLoggedIn && <SearchForm />}
           </div>
         </div>
       </nav>

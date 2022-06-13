@@ -1,0 +1,148 @@
+import { useState } from "react";
+import { Link } from "react-router-dom";
+import { likeTweet, replyTweet } from "../../../../services/tweet-service";
+import { useAuth } from "../../../../store/auth-context";
+import classes from "./Tweet.module.css";
+import Modal from "../../../UI/Modal/Modal";
+import ProfileImage from "../../../UI/ProfileImage/ProfileImage";
+import TweetWithReply from "./TweetWithReply/TweetWithReply";
+import Tag from "../../../UI/Tag/Tag";
+
+const Tweet = (props) => {
+  const auth = useAuth();
+  const [tweet, setTweet] = useState(props.tweet);
+  const [likes, setLikes] = useState(props.tweet.likes);
+  const [showReply, setShowReply] = useState(false);
+
+  const isLiked = likes.map((x) => x.userLoginId).includes(auth.user.loginId);
+
+  const onLikeToggleHandler = (event) => {
+    event.preventDefault();
+    likeTweet(
+      auth.token,
+      auth.user.loginId,
+      tweet.id,
+      () => {
+        setLikes((prev) => {
+          if (prev.map((x) => x.userLoginId).includes(auth.user.loginId)) {
+            return prev.filter((x) => x.userLoginId !== auth.user.loginId);
+          } else {
+            return [...prev, { userLoginId: auth.user.loginId }];
+          }
+        });
+      },
+      () => {}
+    );
+  };
+  const showReplyHandler = (event) => {
+    setShowReply(true);
+  };
+  const postReplyHandler = (tweetDetails) => {
+    replyTweet(
+      auth.token,
+      auth.user.loginId,
+      tweet.id,
+      tweetDetails,
+      (data) => {
+        console.log(data);
+        setTweet(data);
+      },
+      () => {}
+    );
+  };
+  const hideReplyHandler = (event) => {
+    setShowReply(false);
+    console.log(showReply);
+  };
+  let tweetMsg = [];
+  let parMsg = "";
+  let count = 0;
+  tweet.message.split("").forEach((x) => {
+    if (x === "@" || x === "#") {
+      tweetMsg.push(parMsg);
+      parMsg = "";
+    } else if (parMsg !== "" && x === " ") {
+      if (parMsg.indexOf("@") > -1 || parMsg.indexOf("#") > -1) {
+        tweetMsg.push(<Tag key={"inMsg" + tweet.id + count++}>{parMsg}</Tag>);
+        parMsg = "";
+      } else {
+        // tweetMsg.push(parMsg);
+      }
+    }
+    parMsg += x;
+  });
+  if (parMsg !== "") tweetMsg.push(parMsg);
+
+  return (
+    <>
+      <div className="container pt-2 mb-3 card">
+        <div className="d-flex gap-2">
+          <ProfileImage
+            key={tweet.loginId}
+            seed={tweet.loginId}
+            className="rounded-circle bg-dark bg-opacity-50"
+          />
+          <div className="w-100">
+            <Link
+              to={"/tweets/" + tweet.loginId}
+              className={`text-capitalize fw-bold ${classes["name"]}`}
+            >
+              {tweet.firstName + " " + tweet.lastName}
+            </Link>{" "}
+            <span className="text-muted">
+              @{tweet.loginId} &middot; {getTimeDiff(tweet.lastModifiedDate)}
+            </span>
+            <p className="">{tweetMsg}</p>
+            <p>
+              {tweet.tags.map((x, index) => (
+                <Tag key={tweet.id + index}>{"#" + x + " "}</Tag>
+              ))}
+            </p>
+            <div className="d-flex justify-content-between w-100">
+              <form onSubmit={onLikeToggleHandler}>
+                <button className="btn shadow-none">
+                  {isLiked ? (
+                    <>
+                      <i className="bi bi-hand-thumbs-up-fill"></i> liked (
+                      {likes.length})
+                    </>
+                  ) : (
+                    <>
+                      <i className="bi bi-hand-thumbs-up"></i> like (
+                      {likes.length})
+                    </>
+                  )}
+                </button>
+              </form>
+              <button className="btn shadow-none" onClick={showReplyHandler}>
+                <>
+                  <i className="bi bi-chat"></i> reply ({tweet.replies.length})
+                </>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      {showReply && (
+        <Modal onBackdropClick={hideReplyHandler}>
+          <TweetWithReply tweet={tweet} postReply={postReplyHandler} />
+        </Modal>
+      )}
+    </>
+  );
+};
+
+const getTimeDiff = (t) => {
+  if (t == null) return "(--)";
+  const timeDiffInMs = new Date() - new Date(t);
+  const timeDiffInDays = timeDiffInMs / (1000 * 60 * 60 * 24);
+  if (timeDiffInDays >= 1) return Math.round(timeDiffInDays) + "d";
+  const timeDiffInHrs = timeDiffInDays * 24;
+  if (timeDiffInHrs >= 1) return Math.round(timeDiffInHrs) + "h";
+  const timeDiffInMins = timeDiffInHrs * 60;
+  if (timeDiffInMins >= 1) return Math.round(timeDiffInMins) + "m";
+  const timeDiffInSecs = timeDiffInMins * 60;
+  return Math.round(timeDiffInSecs) + "s";
+};
+
+export default Tweet;
