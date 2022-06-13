@@ -1,8 +1,10 @@
 import { Link, Navigate } from "react-router-dom";
 import useInput from "../../hooks/use-input";
+import { register } from "../../services/user-service";
 import { useAuth } from "../../store/auth-context";
 import Input from "../UI/Input/Input";
 import classes from "./Signup.module.css";
+import { toast } from "react-toastify";
 
 const isNotEmpty = (val) => val.trim().length !== 0;
 const islengthGreaterThanThree = (val) => val.trim().length >= 3;
@@ -89,6 +91,16 @@ const Signup = (props) => {
     };
     console.log(enteredValues);
     resetAll();
+
+    register(
+      enteredValues,
+      (data) => {
+        toast.success("Successfully Registed, Please login");
+      },
+      (err) => {
+        toast.error("Something went wrong: " + err.data);
+      }
+    );
   };
   const resetAll = () => {
     firstNameReset();
