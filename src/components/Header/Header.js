@@ -1,10 +1,15 @@
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../store/auth-context";
 import NavLink from "./NavLink/NavLink";
 import SearchForm from "./SearchForm/SearchForm";
 
 const Header = () => {
   const auth = useAuth();
-
+  const navigate = useNavigate();
+  const onLogoutHandler = () => {
+    navigate("/welcome");
+    auth.logout();
+  };
   return (
     <div className="container-fluid bg-dark flex-grow-0 flex-shrink-1">
       <nav
@@ -59,7 +64,7 @@ const Header = () => {
                   <li className="nav-item">
                     <div
                       className="nav-link"
-                      onClick={auth.logout}
+                      onClick={onLogoutHandler}
                       style={{ cursor: "pointer" }}
                     >
                       logout
