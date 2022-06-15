@@ -1,10 +1,10 @@
 import { useState } from "react";
-import SearchModal from "../../../UI/SearchModal/SearchModal";
+import SearchModal from "../../UI/SearchModal/SearchModal";
 import classes from "./SearchForm.module.css";
 import ReactLoading from "react-loading";
-import User from "../../../Main/Users/User/User";
-import { searchUsers } from "../../../../services/user-service";
-import { useAuth } from "../../../../store/auth-context";
+import User from "../../Main/Users/User/User";
+import { searchUsers } from "../../../services/user-service";
+import { useAuth } from "../../../store/auth-context";
 import { toast } from "react-toastify";
 const SearchForm = () => {
   const [searchTerm, setSearchTerm] = useState("");

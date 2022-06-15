@@ -3,7 +3,7 @@ import Input from "../UI/Input/Input";
 import classes from "./ForgotPassword.module.css";
 import { toast } from "react-toastify";
 import { forgotPassword } from "../../services/user-service";
-import { useNavigate, Navigate } from "react-router-dom";
+import { useNavigate, Navigate, Link } from "react-router-dom";
 import { useAuth } from "../../store/auth-context";
 const isNotEmpty = (val) => val.trim().length !== 0;
 const ForgotPassword = () => {
@@ -128,6 +128,13 @@ const ForgotPassword = () => {
               </button>
             </div>
           </form>
+          <div className="col-12 d-flex">
+            <p className="mt-5 mb-3 mx-auto">
+              <Link to="/login" className="link-dark">
+                sign in
+              </Link>
+            </p>
+          </div>
         </div>
       </div>
     </>

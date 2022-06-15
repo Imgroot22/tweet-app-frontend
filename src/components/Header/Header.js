@@ -1,4 +1,4 @@
-import { useAuth } from "../../../store/auth-context";
+import { useAuth } from "../../store/auth-context";
 import NavLink from "./NavLink/NavLink";
 import SearchForm from "./SearchForm/SearchForm";
 
@@ -45,48 +45,27 @@ const Header = () => {
                 </li>
               )}
               {auth.isLoggedIn && (
-                <li className="nav-item">
-                  <NavLink
-                    className="nav-link"
-                    activeClass="active"
-                    to={"/tweets/" + auth.user.loginId}
-                  >
-                    My Tweets
-                  </NavLink>
-                </li>
-              )}
-              {!auth.isLoggedIn && (
-                <li className="nav-item">
-                  <NavLink
-                    className="nav-link"
-                    activeClass="active"
-                    to="/login"
-                  >
-                    sign in
-                  </NavLink>
-                </li>
-              )}
-              {!auth.isLoggedIn && (
-                <li className="nav-item">
-                  <NavLink
-                    className="nav-link"
-                    activeClass="active"
-                    to="/register"
-                  >
-                    sign up
-                  </NavLink>
-                </li>
-              )}
-              {auth.isLoggedIn && (
-                <li className="nav-item">
-                  <div
-                    className="nav-link"
-                    onClick={auth.logout}
-                    style={{ cursor: "pointer" }}
-                  >
-                    logout
-                  </div>
-                </li>
+                <>
+                  <li className="nav-item">
+                    <NavLink
+                      className="nav-link"
+                      activeClass="active"
+                      to={"/tweets/" + auth.user.loginId}
+                    >
+                      My Tweets
+                    </NavLink>
+                  </li>
+
+                  <li className="nav-item">
+                    <div
+                      className="nav-link"
+                      onClick={auth.logout}
+                      style={{ cursor: "pointer" }}
+                    >
+                      logout
+                    </div>
+                  </li>
+                </>
               )}
             </ul>
             {auth.isLoggedIn && <SearchForm />}
