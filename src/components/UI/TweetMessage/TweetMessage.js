@@ -10,7 +10,9 @@ const TweetMessage = (props) => {
       parMsg = "";
     } else if (parMsg !== "" && x === " ") {
       if (parMsg.indexOf("@") > -1 || parMsg.indexOf("#") > -1) {
-        tweetMsg.push(<Tag key={"inMsg" + props.id + count++}>{parMsg}</Tag>);
+        tweetMsg.push(
+          <Tag key={"inMsg" + props.id || random(5) + count++}>{parMsg}</Tag>
+        );
         parMsg = "";
       } else {
         // tweetMsg.push(parMsg);
@@ -20,7 +22,9 @@ const TweetMessage = (props) => {
   });
   if (parMsg !== "") {
     if (parMsg.indexOf("@") > -1 || parMsg.indexOf("#") > -1) {
-      tweetMsg.push(<Tag key={"inMsg" + props.id + count++}>{parMsg}</Tag>);
+      tweetMsg.push(
+        <Tag key={"inMsg" + props.id || random(5) + count++}>{parMsg}</Tag>
+      );
     } else {
       tweetMsg.push(parMsg);
     }
@@ -30,3 +34,13 @@ const TweetMessage = (props) => {
 };
 
 export default TweetMessage;
+
+const random = (len) => {
+  const Characters =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  let str = "";
+  for (let i = 0; i < len; i++) {
+    str += Characters.at(Math.floor(Characters.length * Math.random()));
+  }
+  return str;
+};

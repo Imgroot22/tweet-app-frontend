@@ -1,26 +1,9 @@
 import { Link } from "react-router-dom";
 import ProfileImage from "../../../UI/ProfileImage/ProfileImage";
 import Tag from "../../../UI/Tag/Tag";
+import TweetMessage from "../../../UI/TweetMessage/TweetMessage";
 
 const Tweet = (props) => {
-  let tweetMsg = [];
-  let parMsg = "";
-  let count = 0;
-  props.message.split("").forEach((x) => {
-    if (x === "@" || x === "#") {
-      tweetMsg.push(parMsg);
-      parMsg = "";
-    } else if (parMsg !== "" && x === " ") {
-      if (parMsg.indexOf("@") > -1 || parMsg.indexOf("#") > -1) {
-        tweetMsg.push(<Tag key={"inMsg" + props.id + count++}>{parMsg}</Tag>);
-        parMsg = "";
-      } else {
-        // tweetMsg.push(parMsg);
-      }
-    }
-    parMsg += x;
-  });
-  if (parMsg !== "") tweetMsg.push(parMsg);
   return (
     <div className="container pt-2 flex-wrap card ">
       <div className="hstack gap-2 mb-3">
@@ -46,7 +29,7 @@ const Tweet = (props) => {
         </div>
       </div>
       <div className="">
-        <p className="">{tweetMsg}</p>
+        <TweetMessage msg={props.message} />
         <p>
           {props.tags.map((x, index) => (
             <Tag key={props.id + index}>{"#" + x + " "}</Tag>
