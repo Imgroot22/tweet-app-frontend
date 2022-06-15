@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../store/auth-context";
 import NavLink from "./NavLink/NavLink";
 import SearchForm from "./SearchForm/SearchForm";
-
+import classes from "./Header.module.css";
 const Header = () => {
   const auth = useAuth();
   const navigate = useNavigate();
@@ -11,12 +11,12 @@ const Header = () => {
     auth.logout();
   };
   return (
-    <div className="container-fluid bg-dark flex-grow-0 flex-shrink-1">
+    <div className={`container-fluid bg-dark flex-grow-0 flex-shrink-1`}>
       <nav
         className="navbar navbar-expand-sm navbar-dark bg-dark"
         aria-label="navbar"
       >
-        <div className="container-fluid">
+        <div className={`container-fluid ${classes["header-container"]} `}>
           <NavLink
             className="navbar-brand my-auto"
             to={auth.isLoggedIn ? "/home" : "/welcome"}
