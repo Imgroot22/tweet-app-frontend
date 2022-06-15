@@ -3,11 +3,14 @@ import { getAllTweets } from "../../../services/tweet-service";
 import { useAuth } from "../../../store/auth-context";
 import Card from "../../UI/Card/Card";
 import Tweet from "./Tweet/Tweet";
+import ReactLoading from "react-loading";
 
 const Trends = () => {
   const [trendingTweets, setTrendingTweets] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
   const auth = useAuth();
   useEffect(() => {
+    setIsLoading(true);
     getAllTweets(
       auth.token,
       (data) => {
@@ -25,8 +28,8 @@ const Trends = () => {
               a.replies.length
           )
           .filter((_, i) => i < 5);
-        console.log(filteredTrendingTweet);
         setTrendingTweets(filteredTrendingTweet);
+        setIsLoading(false);
       },
       () => {}
     );
@@ -34,9 +37,19 @@ const Trends = () => {
 
   return (
     <Card title="Trending Tweets">
-      {trendingTweets.map((user) => (
-        <Tweet key={user.id} {...user} />
-      ))}
+      {!isLoading ? (
+        trendingTweets.map((user) => <Tweet key={user.id} {...user} />)
+      ) : (
+        <div className="d-flex w-100">
+          <ReactLoading
+            type="balls"
+            color="rgba(33,37,41,1)"
+            height="120px"
+            width="120px"
+            className="m-auto"
+          />
+        </div>
+      )}
     </Card>
   );
 };
