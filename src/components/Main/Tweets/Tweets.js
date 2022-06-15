@@ -20,11 +20,10 @@ const Tweets = () => {
       auth.token,
       (data) => {
         setTweets(data);
-        console.log(data);
+        setIsLoading(false);
       },
       () => {}
     );
-    setIsLoading(false);
   }, [auth.token]);
 
   const onPostHandler = (tweet) => {
@@ -34,19 +33,17 @@ const Tweets = () => {
     });
   };
 
-  if (isLoading)
-    return (
-      <div className="d-flex w-100">
-        <ReactLoading
-          type="balls"
-          color="rgba(33,37,41,1)"
-          height="120px"
-          width="120px"
-          className="m-auto"
-        />
-      </div>
-    );
-  return (
+  return isLoading ? (
+    <div className="d-flex w-100">
+      <ReactLoading
+        type="balls"
+        color="rgba(33,37,41,1)"
+        height="120px"
+        width="120px"
+        className="m-auto"
+      />
+    </div>
+  ) : (
     <>
       <div className="mb-3 d-flex">
         <button
@@ -58,7 +55,7 @@ const Tweets = () => {
           post a tweet
         </button>
       </div>
-      {tweets.length === 0 ? (
+      {!isLoading && tweets.length === 0 ? (
         <p className="text-center fw-bold">No Tweets</p>
       ) : (
         tweets.map((tweet) => {
