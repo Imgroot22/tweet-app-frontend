@@ -107,7 +107,12 @@ const Tweet = (props) => {
       </div>
       {showReply && (
         <Modal onBackdropClick={hideReplyHandler}>
-          <TweetWithReply tweet={tweet} postReply={postReplyHandler} />
+          <TweetWithReply
+            onLikeToggleHandler={onLikeToggleHandler}
+            tweet={tweet}
+            likes={likes}
+            postReply={postReplyHandler}
+          />
         </Modal>
       )}
     </>

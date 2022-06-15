@@ -1,6 +1,4 @@
-import { useState } from "react";
 import { Link } from "react-router-dom";
-import { likeTweet } from "../../../../../services/tweet-service";
 import { useAuth } from "../../../../../store/auth-context";
 import ProfileImage from "../../../../UI/ProfileImage/ProfileImage";
 import Tag from "../../../../UI/Tag/Tag";
@@ -12,25 +10,8 @@ import classes from "./TweetWithReply.module.css";
 const TweetWithReply = (props) => {
   const auth = useAuth();
   const tweet = props.tweet;
-  const [likes, setLikes] = useState(props.tweet.likes);
-  const onLikeToggleHandler = (event) => {
-    event.preventDefault();
-    likeTweet(
-      auth.token,
-      auth.user.loginId,
-      tweet.id,
-      () => {
-        setLikes((prev) => {
-          if (prev.map((x) => x.userLoginId).includes(auth.user.loginId)) {
-            return prev.filter((x) => x.userLoginId !== auth.user.loginId);
-          } else {
-            return [...prev, { userLoginId: auth.user.loginId }];
-          }
-        });
-      },
-      () => {}
-    );
-  };
+  const likes = props.likes;
+
   const isLiked = likes.map((x) => x.userLoginId).includes(auth.user.loginId);
   return (
     <>
@@ -59,7 +40,7 @@ const TweetWithReply = (props) => {
                 ))}
               </p>
               <div className="d-flex justify-content-between w-100">
-                <form onSubmit={onLikeToggleHandler}>
+                <form onSubmit={props.onLikeToggleHandler}>
                   <button className="btn shadow-none">
                     {isLiked ? (
                       <>
