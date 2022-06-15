@@ -1,4 +1,5 @@
 import ProfileImage from "../../../../../../UI/ProfileImage/ProfileImage";
+import TweetMessage from "../../../../../../UI/TweetMessage/TweetMessage";
 
 const Reply = (props) => {
   return (
@@ -14,7 +15,7 @@ const Reply = (props) => {
         />
         <div>
           <p className="mb-0">{"@" + props.reply.userLoginId}</p>
-          <p className="mb-3">{props.reply.message}</p>
+          <TweetMessage className="mb-3" msg={props.reply.message} />
         </div>
       </div>
     </div>

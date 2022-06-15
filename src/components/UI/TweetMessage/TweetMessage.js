@@ -30,7 +30,7 @@ const TweetMessage = (props) => {
     }
   }
 
-  return <p>{tweetMsg}</p>;
+  return <p className={props.className}>{tweetMsg}</p>;
 };
 
 export default TweetMessage;
