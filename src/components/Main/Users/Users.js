@@ -4,55 +4,17 @@ import { useEffect, useState } from "react";
 import { getAllUsers } from "../../../services/user-service";
 import { useAuth } from "../../../store/auth-context";
 import { toast } from "react-toastify";
-// const exampleUsers = [
-//   {
-//     name: "Yogesh R",
-//     loginId: "Imgroot",
-//     img: {
-//       src: "https://picsum.photos/50",
-//       alt: "profile",
-//     },
-//   },
-//   {
-//     name: "Suhash B",
-//     loginId: "diodsk_w",
-//     img: {
-//       src: "https://picsum.photos/50",
-//       alt: "profile",
-//     },
-//   },
-//   {
-//     name: "Jigigi R",
-//     loginId: "dihjfd_22",
-//     img: {
-//       src: "https://picsum.photos/50",
-//       alt: "profile",
-//     },
-//   },
-//   {
-//     name: "Lol R",
-//     loginId: "lololo",
-//     img: {
-//       src: "https://picsum.photos/50",
-//       alt: "profile",
-//     },
-//   },
-//   {
-//     name: "Lol R",
-//     loginId: "lololo",
-//     img: {
-//       src: "https://picsum.photos/50",
-//       alt: "profile",
-//     },
-//   },
-// ];
+import ReactLoading from "react-loading";
 
+const USER_LIMIT = 5;
 const Users = () => {
   const [users, setUsers] = useState([]);
-  const [limit, setLimit] = useState(5);
+  const [limit, setLimit] = useState(USER_LIMIT);
+  const [isLoading, setIsLoading] = useState(true);
   const auth = useAuth();
 
   useEffect(() => {
+    setIsLoading(true);
     getAllUsers(
       auth.token,
       (data) => {
@@ -60,6 +22,7 @@ const Users = () => {
           (x) => x.loginId !== auth.user.loginId
         );
         setUsers(filteredUsers);
+        setIsLoading(false);
       },
       (err) => {
         toast.error("Something went wrong!: " + err.data);
@@ -75,31 +38,47 @@ const Users = () => {
     }
   };
   const viewLessHandler = (event) => {
-    setLimit(5);
+    setLimit(USER_LIMIT);
   };
 
   return (
     <Card title="People You May Know">
-      {users
-        .filter((_, index) => index < limit)
-        .map((user) => (
-          <User {...user} key={user.id} />
-        ))}
-      {limit < users.length - 1 && (
-        <button
-          className="btn btn-outline-primary w-100"
-          onClick={viewMoreHandler}
-        >
-          view more
-        </button>
-      )}
-      {limit === users.length && (
-        <button
-          className="btn btn-outline-primary w-100"
-          onClick={viewLessHandler}
-        >
-          view less
-        </button>
+      {isLoading ? (
+        <div className="d-flex w-100">
+          <ReactLoading
+            type="balls"
+            color="rgba(33,37,41,1)"
+            height="120px"
+            width="120px"
+            className="m-auto"
+          />
+        </div>
+      ) : users.length === 0 ? (
+        <p className="text-center fw-bold">No Users</p>
+      ) : (
+        <>
+          {users
+            .filter((_, index) => index < limit)
+            .map((user) => (
+              <User {...user} key={user.id} />
+            ))}
+          {limit < users.length - 1 && (
+            <button
+              className="btn btn-outline-primary w-100"
+              onClick={viewMoreHandler}
+            >
+              view more
+            </button>
+          )}
+          {limit === users.length && (
+            <button
+              className="btn btn-outline-primary w-100"
+              onClick={viewLessHandler}
+            >
+              view less
+            </button>
+          )}
+        </>
       )}
     </Card>
   );

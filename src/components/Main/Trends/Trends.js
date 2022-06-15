@@ -38,7 +38,11 @@ const Trends = () => {
   return (
     <Card title="Trending Tweets">
       {!isLoading ? (
-        trendingTweets.map((user) => <Tweet key={user.id} {...user} />)
+        trendingTweets.length === 0 ? (
+          <p className="text-center fw-bold">No Trending Tweets</p>
+        ) : (
+          trendingTweets.map((user) => <Tweet key={user.id} {...user} />)
+        )
       ) : (
         <div className="d-flex w-100">
           <ReactLoading
