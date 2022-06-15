@@ -1,28 +1,81 @@
+import { useState } from "react";
+import { Link } from "react-router-dom";
+import { likeTweet } from "../../../../../services/tweet-service";
+import { useAuth } from "../../../../../store/auth-context";
+import ProfileImage from "../../../../UI/ProfileImage/ProfileImage";
+import Tag from "../../../../UI/Tag/Tag";
+import TweetMessage from "../../../../UI/TweetMessage/TweetMessage";
 import Replies from "./Replies/Replies";
 import ReplyForm from "./ReplyForm/ReplyForm";
 import classes from "./TweetWithReply.module.css";
 
 const TweetWithReply = (props) => {
+  const auth = useAuth();
   const tweet = props.tweet;
+  const [likes, setLikes] = useState(props.tweet.likes);
+  const onLikeToggleHandler = (event) => {
+    event.preventDefault();
+    likeTweet(
+      auth.token,
+      auth.user.loginId,
+      tweet.id,
+      () => {
+        setLikes((prev) => {
+          if (prev.map((x) => x.userLoginId).includes(auth.user.loginId)) {
+            return prev.filter((x) => x.userLoginId !== auth.user.loginId);
+          } else {
+            return [...prev, { userLoginId: auth.user.loginId }];
+          }
+        });
+      },
+      () => {}
+    );
+  };
+  const isLiked = likes.map((x) => x.userLoginId).includes(auth.user.loginId);
   return (
     <>
       <div className="row">
         <div className="col-12 col-sm-5 d-flex gap-2">
-          <img
-            className="rounded-circle"
-            src="https://picsum.photos/50"
-            alt="profile"
-            width="50"
-            height="50"
-          />
-          <div className="w-100">
-            <span className="">
-              {"name!!"}
+          <div className="d-flex gap-2">
+            <ProfileImage
+              key={tweet.loginId}
+              seed={tweet.loginId}
+              className="rounded-circle bg-dark bg-opacity-50"
+            />
+            <div className="w-100">
+              <Link
+                to={"/tweets/" + tweet.loginId}
+                className={`text-capitalize fw-bold ${classes["name"]}`}
+              >
+                {tweet.firstName + " " + tweet.lastName}
+              </Link>{" "}
               <span className="text-muted">
                 @{tweet.loginId} &middot; {getTimeDiff(tweet.lastModifiedDate)}
               </span>
-            </span>
-            <p className="">{tweet.message}</p>
+              <TweetMessage msg={tweet.message} id={tweet.id} />
+              <p>
+                {tweet.tags.map((x, index) => (
+                  <Tag key={tweet.id + index}>{"#" + x + " "}</Tag>
+                ))}
+              </p>
+              <div className="d-flex justify-content-between w-100">
+                <form onSubmit={onLikeToggleHandler}>
+                  <button className="btn shadow-none">
+                    {isLiked ? (
+                      <>
+                        <i className="bi bi-hand-thumbs-up-fill"></i> liked (
+                        {likes.length})
+                      </>
+                    ) : (
+                      <>
+                        <i className="bi bi-hand-thumbs-up"></i> like (
+                        {likes.length})
+                      </>
+                    )}
+                  </button>
+                </form>
+              </div>
+            </div>
           </div>
         </div>
         <div className={`col-sm-1 d-none d-sm-flex ${classes["vr-h"]}`}>

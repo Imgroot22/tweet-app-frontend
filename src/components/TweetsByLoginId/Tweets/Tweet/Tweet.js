@@ -14,6 +14,7 @@ import TweetWithReply from "../../../Main/Tweets/Tweet/TweetWithReply/TweetWithR
 import EditTweet from "./EditTweet/EditTweet";
 import DeleteTweet from "./DeleteTweet/DeleteTweet";
 import { toast } from "react-toastify";
+import TweetMessage from "../../../UI/TweetMessage/TweetMessage";
 
 const Tweet = (props) => {
   const auth = useAuth();
@@ -122,25 +123,6 @@ const Tweet = (props) => {
     setShowEdit(false);
     setShowDelete(false);
   };
-  let tweetMsg = [];
-  let parMsg = "";
-  let count = 0;
-  tweet.message.split("").forEach((x) => {
-    if (x === "@" || x === "#") {
-      tweetMsg.push(parMsg);
-      parMsg = "";
-    } else if (parMsg !== "" && x === " ") {
-      if (parMsg.indexOf("@") > -1 || parMsg.indexOf("#") > -1) {
-        tweetMsg.push(<Tag key={"inMsg" + tweet.id + count++}>{parMsg}</Tag>);
-        parMsg = "";
-      } else {
-        // tweetMsg.push(parMsg);
-      }
-    }
-    parMsg += x;
-  });
-  if (parMsg !== "") tweetMsg.push(parMsg);
-
   return (
     <>
       <div className="container pt-2 mb-3 card">
@@ -160,7 +142,7 @@ const Tweet = (props) => {
             <span className="text-muted">
               @{tweet.loginId} &middot; {getTimeDiff(tweet.lastModifiedDate)}
             </span>
-            <p className="">{tweetMsg}</p>
+            <TweetMessage msg={tweet.message} />
             <p>
               {tweet.tags.map((x, index) => (
                 <Tag key={tweet.id + index}>{"#" + x + " "}</Tag>

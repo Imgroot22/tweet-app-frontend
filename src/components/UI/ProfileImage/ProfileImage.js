@@ -8,8 +8,8 @@ const ProfileImage = (props) => {
       src={`data:image/svg+xml;base64,${btoa(avatar)}`}
       {...props}
       alt="profile"
-      width="50"
-      height="50"
+      width={props.width || "50"}
+      height={props.height || "50"}
     />
   );
 };

@@ -14,7 +14,7 @@ const Replies = (props) => {
   return (
     <>
       <div className="rounded bg-dark">
-        <p className="p-3 ps-2 text-light mb-0">Replies</p>
+        <p className="p-3 ps-2 text-light mb-0 fw-bold">Replies</p>
       </div>
       <div className={`rounded p-2 mb-2 ${classes["replies"]}`}>
         {replies.map((reply, index) => {
