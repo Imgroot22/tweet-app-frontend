@@ -132,6 +132,10 @@ const ForgotPassword = () => {
             <p className="mt-5 mb-3 mx-auto">
               <Link to="/login" className="link-dark">
                 sign in
+              </Link>{" "}
+              or{" "}
+              <Link to="/register" className="link-dark">
+                sign up
               </Link>
             </p>
           </div>
