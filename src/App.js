@@ -1,9 +1,10 @@
 import { Route, Routes, Navigate } from "react-router-dom";
 import "./App.css";
-import RequiredAuthentication from "./components/auth/RequiredAuthentication";
+import RequiredAuthentication from "./components/Auth/RequiredAuthentication";
 import ForgotPassword from "./components/ForgotPassword/ForgotPassword";
 import Header from "./components/Header/Header";
 import Main from "./components/Main/Main";
+import PageNotFound from "./components/PageNotFound/PageNotFound";
 import Signin from "./components/Signin/Signin";
 import Signup from "./components/Signup/Signup";
 import TweetsByLoginId from "./components/TweetsByLoginId/TweetsByLoginId";
@@ -41,6 +42,7 @@ function App() {
             path="/"
             element={<Navigate to={auth.isLoggedIn ? "/home" : "/welcome"} />}
           />
+          <Route path="/*" element={<PageNotFound />} />
         </Routes>
       </div>
     </AuthContextProvider>
