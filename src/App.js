@@ -42,7 +42,7 @@ function App() {
             path="/"
             element={<Navigate to={auth.isLoggedIn ? "/home" : "/welcome"} />}
           />
-          <Route path="/*" element={<PageNotFound />} />
+          <Route path="*" element={<PageNotFound />} />
         </Routes>
       </div>
     </AuthContextProvider>
